@@ -3,11 +3,13 @@
 - [Neural Networks and Deep Learning](#neural-networks-and-deep-learning)
   - [Numpy functions](#numpy-functions)
     - [Random sampling](#random-sampling)
+  - [Matplotlib usage](#matplotlib-usage)
   - [W2A1: Python Basics with Numpy](#w2a1-python-basics-with-numpy)
   - [W2A2: Logistic Regression with a Neural Network mindset](#w2a2-logistic-regression-with-a-neural-network-mindset)
   - [2-layer NN calculation](#2-layer-nn-calculation)
     - [NN notation setup](#nn-notation-setup)
     - [Forward](#forward)
+    - [Cost](#cost)
     - [Backward](#backward)
   - [W3A1 Planar data classification with one hidden layer](#w3a1-planar-data-classification-with-one-hidden-layer)
 
@@ -41,6 +43,35 @@ See [oneline documentaion](https://numpy.org/doc/stable/reference/random/index.h
 - `np.random.rand(dim1, dim2, ...)` uniform distribution $U[0, 1)$
 - `np.random.randn(dim1, dim2, ...)` standard normal distribution $N(0, 1)$
 
+## Matplotlib usage
+
+- Show image:
+  ```python
+  img = tensor(height, width, channels)
+  # or
+  img = matrix(height, width)
+  plt.imgshow(img)
+  ```
+- Plot curve [see more](https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.plot.html):
+  ```python
+  # plot() common usage
+  plt.plot(x, y)        # plot x and y, default line style and color
+  plt.plot(x, y, 'bo')  # plot x and y, blue circle markers
+  plt.plot(y)           # plot y using x as index array 0..N-1
+  plt.plot(y, 'r+')     # ditto, but with red plusses
+  
+  x = np.linspace(0, 10, 1000)
+  y = np.sin(x)
+
+  plt.plot(x, y, 'r', label='$\sin x$')
+
+  plt.legend(loc='upper right')
+  plt.xlabel(r"$x$")
+  plt.ylabel(r"$f(x)$")
+
+  plt.show()
+  ```
+
 ## W2A1: Python Basics with Numpy
 
 - $\displaystyle \operatorname{sigmoid}(x) = \sigma(x) = \frac{1}{1+e^{-x}}, \quad \frac{d\sigma}{dx} = \sigma(1-\sigma) .$
@@ -63,8 +94,8 @@ See [oneline documentaion](https://numpy.org/doc/stable/reference/random/index.h
   - Standardize, for images, devide every image vector by 255
 - Algorithm for **logistic regression** (single feature neural):
   - Neuron: $\hat{Y} = A = \sigma(Z) = \sigma(\mathbf{w}^T \mathbf{X}+b)$
-  - Cost : $\displaystyle J = -\frac{1}{m}\sum_{i=1}^{m}(y^{(i)}\log(a^{(i)})+(1-y^{(i)})\log(1-a^{(i)}))$
-  - Derivatives : $\displaystyle \frac{\partial J}{\partial \mathbf{w}} = \frac{1}{m}X(\hat{Y}-Y)^T , \; \displaystyle \frac{\partial J}{\partial b} = \frac{1}{m} \sum_{i=1}^m (\hat{y}^{(i)}-y^{(i)})$
+  - Cost : $\displaystyle J = \frac{1}{m} \sum_i {L}(\hat y ^{(i)}, y ^{(i)}) = -\frac{1}{m}\sum_{i=1}^{m}\Big(y^{(i)}\ln(\hat y^{(i)})+(1-y^{(i)})\ln(1-\hat y^{(i)})\Big)$
+  - Derivatives : $\displaystyle \frac{dL}{dz} = \hat y-y, \quad \frac{\partial J}{\partial \mathbf{w}} = \frac{1}{m}X(\hat{Y}-Y)^T , \quad \displaystyle \frac{\partial J}{\partial b} = \frac{1}{m} \sum_{i=1}^m (\hat{y}^{(i)}-y^{(i)})$
 - Functions in this assignment:
   - `initialize(dim) => w: of shape(dim, 1), b: number`
   - `propagate(w, b, X, Y) => grads{dw, db}, cost: number`
@@ -82,41 +113,17 @@ See [oneline documentaion](https://numpy.org/doc/stable/reference/random/index.h
           "w" : w, 
           "b" : b,
           "learning_rate" : learning_rate,
-          "num_iterations": num_iterations
+          "num_iterations": num_iterations`
         }
         return d
-    ```
-  - Show image:
-    ```python
-    img = tensor(height, width, channels)
-    # or
-    img = matrix(height, width)
-    plt.imgshow(img)
-    ```
-  - Plot curve [see more](https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.plot.html):
-    ```python
-    # plot() common usage
-    plt.plot(x, y)        # plot x and y, default line style and color
-    plt.plot(x, y, 'bo')  # plot x and y, blue circle markers
-    plt.plot(y)           # plot y using x as index array 0..N-1
-    plt.plot(y, 'r+')     # ditto, but with red plusses
-    
-    x = np.linspace(0, 10, 1000)
-    y = np.sin(x)
-
-    plt.plot(x, y, 'r', label='$\sin x$')
-
-    plt.legend(loc='upper right')
-    plt.xlabel(r"$x$")
-    plt.ylabel(r"$f(x)$")
-
-    plt.show()
     ```
 
 ## 2-layer NN calculation
 
 ### NN notation setup
 
+1. $X=(x ^{(1)}, x ^{(2)}, \dots, x ^{(m)})$ has shape $(n_x \times m)$ with $n_x$ being size of features, $m$ being number of training examples.
+1. $Y=(y ^{(1)}, y ^{(2)}, \dots, y ^{(m)})$ has shape $(1\times m)$, each a boolean variable.
 1. $\displaystyle x^{(i)}$ is the $i$-th training example
 1. $\square^{[j](i)}_k$ means the $k$-th neuron in $j$-th layer, acting on $i$-th training example.
    1. $\square^{[i]}$ means for $i$-th hidden layer (input layer counted as 0-th)
@@ -124,15 +131,42 @@ See [oneline documentaion](https://numpy.org/doc/stable/reference/random/index.h
 ### Forward
 
 $$ \begin{aligned}
-  a ^{[0]} &= \mathbf{x} \\
+  a ^{[0]} &= {X} \\
   z ^{[1]} &= W ^{[1]} a ^{[0]} + b ^{[1]} \\
   a ^{[1]} &= \tanh ( z ^{[1]} ) \\
   z ^{[2]} &= W ^{[2]} a ^{[1]} + b ^{[2]} \\
   a ^{[2]} &= \sigma ( z ^{[2]} ) \\
-  \hat y &= a ^{[2]}
+  \hat {Y} &= a ^{[2]}
+\end{aligned} $$
+
+### Cost
+
+$$ \begin{aligned}
+  J & = - \frac{1}{m} \sum\limits_{i = 1}^{m} \large{(} \small y^{(i)}\ln\left(a^{[2] (i)}\right) + (1-y^{(i)})\ln\left(1- a^{[2] (i)}\right) \large{)} \small\tag{13} \\
+  & = -\frac{1}{m} \Big(\mathbf{Y} \cdot \ln ( \mathbf{a} ^{[2]} )^T + (1 - \mathbf{Y}) \cdot \ln ( 1 - \mathbf{a} ^{[2]} )^T )
 \end{aligned} $$
 
 ### Backward
+
+Notation: $\circ$ denotes Hadamard elementwise product.
+
+- First layer
+  $$ \newcommand{\pdiff}[1]{\frac{\partial J}{\partial #1}} \begin{aligned}
+    \pdiff{z ^{[2]}} &= a ^{[2]} - Y \\
+    \pdiff{w ^{[2]}} &= \frac{1}{m} \pdiff{z ^{[2]}}  {A ^{[1]}} ^T \\
+    \pdiff{b ^{[2]}} &= \frac{1}{m} (1, \dots, 1)  \pdiff{z ^{[2]}} \\
+  \end{aligned} $$
+- Second layer:
+  $$ \newcommand{\pdiff}[1]{\frac{\partial J}{\partial #1}} \begin{aligned}
+    \boxed{\frac{\partial a ^{[1]}}{\partial z ^{[1]}}} &= 1 - a ^{[1]} \circ a ^{[1]} \\
+    \pdiff{z ^{[1]}} &= {W ^{[2]}}^T \pdiff{z ^{[2]}} \circ \boxed{\frac{\partial a ^{[1]}}{\partial z ^{[1]}}} \\
+    \pdiff{w ^{[1]}} &= \frac{1}{m} \pdiff{z ^{[1]}} X^T \\
+    \pdiff{b ^{[1]}} &= \frac{1}{m} (1, \dots, 1)  \pdiff{z ^{[2]}}
+  \end{aligned} $$
+
+Math details:
+
+With $L(a,y)=-y\ln a - (1-y)\ln(1-a)$, we have $\frac{\partial L}{\partial a} = -\frac{y}{a} - \frac{1-y}{1-a}$. Use chain rule $\frac{\partial L}{\partial z} = \frac{\partial L}{\partial a} \frac{\partial a}{\partial z}$, and $\frac{\partial a}{\partial z} = \sigma' (z)=a(1-a)$, we get $\frac{\partial L}{\partial z} = a - y$
 
 ## W3A1 Planar data classification with one hidden layer
 

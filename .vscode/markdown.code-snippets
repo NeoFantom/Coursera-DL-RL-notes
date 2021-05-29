@@ -5,5 +5,26 @@
 			"^{[$1]}$0"
 		],
 		"description": "Superscript square brackets"
+	},
+	"escape Superscript square brackets": {
+		"prefix": "\\upsq",
+		"body": [
+			"^{[$1]}$0"
+		],
+		"description": "Superscript square brackets"
+	},
+	"Superscript parentheses": {
+		"prefix": "upparen",
+		"body": [
+			"^{($1)}$0"
+		],
+		"description": "Superscript parentheses"
+	},
+	"Partial difference": {
+		"prefix": "\\pdiff",
+		"body": [
+			"\\pdiff{$1}$0"
+		],
+		"description": "Partial difference"
 	}
 }
