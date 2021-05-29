@@ -1,17 +1,20 @@
 # Neural Networks and Deep Learning
 
 - [Neural Networks and Deep Learning](#neural-networks-and-deep-learning)
-  - [numpy functions](#numpy-functions)
+  - [Numpy functions](#numpy-functions)
   - [W2A1: Python Basics with Numpy](#w2a1-python-basics-with-numpy)
   - [W2A2: Logistic Regression with a Neural Network mindset](#w2a2-logistic-regression-with-a-neural-network-mindset)
+  - [NN notation setup](#nn-notation-setup)
+    - [2-layer NN calculation](#2-layer-nn-calculation)
+  - [W3A1 Planar data classification with one hidden layer](#w3a1-planar-data-classification-with-one-hidden-layer)
 
-## numpy functions
+## Numpy functions
 
 - `np.ndarray.reshape(*shape)` is often used. Parameter `-1` means auto-shape. E.g. 
   - `v.reshape(-1, 1)` generates column vector `v.shape = [N, 1]`
   - `v.reshape(-1)` generates 1d array `v.shape = [N,]`
 - `np.linalg.norm(x, ord=2, axis=1, keepdims=True)` calculates 2-norm. See [documentation](https://numpy.org/doc/stable/reference/generated/numpy.linalg.norm.html).
-- `np.random.rand(*shape)` shape is given one by one.
+- `np.random.rand(dim1, dim2, ...)` 
 - `np.zeros(shape: tuple)` shape is a tuple.
 - `np.multiply()` is equivalent to elementwise `A*B`
 
@@ -86,3 +89,24 @@
 
     plt.show()
     ```
+
+## NN notation setup
+
+1. $\displaystyle x^{(i)}$ is the $i$-th training example
+1. $\square^{[j](i)}_k$ means the $k$-th neuron in $j$-th layer, acting on $i$-th training example.
+   1. $\square^{[i]}$ means for $i$-th hidden layer (input layer counted as 0-th)
+
+### 2-layer NN calculation
+
+$$ \begin{aligned}
+  a ^{[0]} &= \mathbf{x} \\
+  z ^{[1]} &= W ^{[1]} a ^{[0]} + b ^{[1]} \\
+  a ^{[1]} &= \sigma ( z ^{[1]} ) \\
+  z ^{[2]} &= W ^{[2]} a ^{[1]} + b ^{[2]} \\
+  a ^{[2]} &= \sigma ( z ^{[2]} ) \\
+  \hat y &= a ^{[2]}
+\end{aligned} $$
+
+## W3A1 Planar data classification with one hidden layer
+
+- 
