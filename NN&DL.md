@@ -2,10 +2,13 @@
 
 - [Neural Networks and Deep Learning](#neural-networks-and-deep-learning)
   - [Numpy functions](#numpy-functions)
+    - [Random sampling](#random-sampling)
   - [W2A1: Python Basics with Numpy](#w2a1-python-basics-with-numpy)
   - [W2A2: Logistic Regression with a Neural Network mindset](#w2a2-logistic-regression-with-a-neural-network-mindset)
-  - [NN notation setup](#nn-notation-setup)
-    - [2-layer NN calculation](#2-layer-nn-calculation)
+  - [2-layer NN calculation](#2-layer-nn-calculation)
+    - [NN notation setup](#nn-notation-setup)
+    - [Forward](#forward)
+    - [Backward](#backward)
   - [W3A1 Planar data classification with one hidden layer](#w3a1-planar-data-classification-with-one-hidden-layer)
 
 ## Numpy functions
@@ -14,9 +17,29 @@
   - `v.reshape(-1, 1)` generates column vector `v.shape = [N, 1]`
   - `v.reshape(-1)` generates 1d array `v.shape = [N,]`
 - `np.linalg.norm(x, ord=2, axis=1, keepdims=True)` calculates 2-norm. See [documentation](https://numpy.org/doc/stable/reference/generated/numpy.linalg.norm.html).
-- `np.random.rand(dim1, dim2, ...)` 
 - `np.zeros(shape: tuple)` shape is a tuple.
-- `np.multiply()` is equivalent to elementwise `A*B`
+- `np.multiply()` is equivalent to elementwise `A * B`
+- `np.squeeze(ndarray, axis=None)` remove axes if this axis has only one element
+
+### Random sampling
+
+See [oneline documentaion](https://numpy.org/doc/stable/reference/random/index.html).
+
+- New version:
+  ```python
+  # Do this (new version)
+  from numpy.random import default_rng
+  rng = default_rng()
+  vals = rng.standard_normal(10)
+  more_vals = rng.standard_normal(10)
+
+  # instead of this (legacy version)
+  from numpy import random
+  vals = random.standard_normal(10)
+  more_vals = random.standard_normal(10)
+  ```
+- `np.random.rand(dim1, dim2, ...)` uniform distribution $U[0, 1)$
+- `np.random.randn(dim1, dim2, ...)` standard normal distribution $N(0, 1)$
 
 ## W2A1: Python Basics with Numpy
 
@@ -90,23 +113,40 @@
     plt.show()
     ```
 
-## NN notation setup
+## 2-layer NN calculation
+
+### NN notation setup
 
 1. $\displaystyle x^{(i)}$ is the $i$-th training example
 1. $\square^{[j](i)}_k$ means the $k$-th neuron in $j$-th layer, acting on $i$-th training example.
    1. $\square^{[i]}$ means for $i$-th hidden layer (input layer counted as 0-th)
 
-### 2-layer NN calculation
+### Forward
 
 $$ \begin{aligned}
   a ^{[0]} &= \mathbf{x} \\
   z ^{[1]} &= W ^{[1]} a ^{[0]} + b ^{[1]} \\
-  a ^{[1]} &= \sigma ( z ^{[1]} ) \\
+  a ^{[1]} &= \tanh ( z ^{[1]} ) \\
   z ^{[2]} &= W ^{[2]} a ^{[1]} + b ^{[2]} \\
   a ^{[2]} &= \sigma ( z ^{[2]} ) \\
   \hat y &= a ^{[2]}
 \end{aligned} $$
 
+### Backward
+
 ## W3A1 Planar data classification with one hidden layer
 
-- 
+Variables:
+
+- `parameters = {W1, b1, W2, b2}`
+- `grads = {dW1, db1, dW2, db2}`
+
+Functions:
+
+- `initialize_parameters(n_x, n_h, n_y) => parameters`
+- `forward_propagation(X, parameters) => Yhat, cache{Z1, A1, Z2, A2}`
+- `compute_cost(A2, Y) => cost: number`
+- `backward_propagation(parameters, cache, X, Y) => grads`
+- `update_parameters(parameters, grads, learning_rate = 1.2) => parameters`
+- `nn_model(X, Y, n_h, num_iterations = 10000, print_cost=False) => parameters`
+- `predict(parameters, X) => predictions: array[bool]`
