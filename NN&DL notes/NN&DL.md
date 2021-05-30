@@ -15,7 +15,7 @@
 
 ## Numpy functions
 
-- `np.ndarray.reshape(*shape)` is often used. Parameter `-1` means auto-shape. E.g. 
+- `np.ndarray.reshape(*shape)` is often used. Parameter `-1` means auto-shape. E.g.
   - `v.reshape(-1, 1)` generates column vector `v.shape = [N, 1]`
   - `v.reshape(-1)` generates 1d array `v.shape = [N,]`
 - `np.linalg.norm(x, ord=2, axis=1, keepdims=True)` calculates 2-norm. See [documentation](https://numpy.org/doc/stable/reference/generated/numpy.linalg.norm.html).
@@ -151,12 +151,14 @@ $$ \begin{aligned}
 Notation: $\circ$ denotes Hadamard elementwise product.
 
 - First layer
+
   $$ \newcommand{\pdiff}[1]{\frac{\partial J}{\partial #1}} \begin{aligned}
     \pdiff{z ^{[2]}} &= a ^{[2]} - Y \\
     \pdiff{w ^{[2]}} &= \frac{1}{m} \pdiff{z ^{[2]}}  {A ^{[1]}} ^T \\
     \pdiff{b ^{[2]}} &= \frac{1}{m} (1, \dots, 1)  \pdiff{z ^{[2]}} \\
   \end{aligned} $$
 - Second layer:
+
   $$ \newcommand{\pdiff}[1]{\frac{\partial J}{\partial #1}} \begin{aligned}
     \boxed{\frac{\partial a ^{[1]}}{\partial z ^{[1]}}} &= 1 - a ^{[1]} \circ a ^{[1]} \\
     \pdiff{z ^{[1]}} &= {W ^{[2]}}^T \pdiff{z ^{[2]}} \circ \boxed{\frac{\partial a ^{[1]}}{\partial z ^{[1]}}} \\
@@ -174,6 +176,8 @@ Andrew Ng's vectorization summary:
 
 ## W3A1 Planar data classification with one hidden layer
 
+> This is an implementation of shallow neural network.
+
 Variables:
 
 - `parameters = {W1, b1, W2, b2}`
@@ -186,5 +190,4 @@ Functions:
 - `compute_cost(A2, Y) => cost: number`
 - `backward_propagation(parameters, cache, X, Y) => grads`
 - `update_parameters(parameters, grads, learning_rate = 1.2) => parameters`
-- `nn_model(X, Y, n_h, num_iterations = 10000, print_cost=False) => parameters`
-- `predict(parameters, X) => predictions: array[bool]`
+- `nn_model(X, Y, n_h, num_iterations = 10000, print_cost=False) => paramete
