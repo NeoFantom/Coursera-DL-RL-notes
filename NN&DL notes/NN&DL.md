@@ -2,6 +2,8 @@
 
 - [Neural Networks and Deep Learning](#neural-networks-and-deep-learning)
   - [Numpy functions](#numpy-functions)
+    - [Glossary](#glossary)
+    - [Functions](#functions)
     - [Random sampling](#random-sampling)
   - [Matplotlib usage](#matplotlib-usage)
   - [W2A1: Python Basics with Numpy](#w2a1-python-basics-with-numpy)
@@ -12,8 +14,15 @@
     - [Cost](#cost)
     - [Backward](#backward)
   - [W3A1 Planar data classification with one hidden layer](#w3a1-planar-data-classification-with-one-hidden-layer)
+  - [W4A1 Building your Deep Neural Network: Step by Step](#w4a1-building-your-deep-neural-network-step-by-step)
 
 ## Numpy functions
+
+### Glossary
+
+See definition of [along an axis](https://numpy.org/doc/stable/glossary.html)
+
+### Functions
 
 - `np.ndarray.reshape(*shape)` is often used. Parameter `-1` means auto-shape. E.g.
   - `v.reshape(-1, 1)` generates column vector `v.shape = [N, 1]`
@@ -75,9 +84,9 @@ See [oneline documentaion](https://numpy.org/doc/stable/reference/random/index.h
 ## W2A1: Python Basics with Numpy
 
 - $\displaystyle \operatorname{sigmoid}(x) = \sigma(x) = \frac{1}{1+e^{-x}}, \quad \frac{d\sigma}{dx} = \sigma(1-\sigma) .$
-- $\displaystyle \mathrm{softmax}(x_i) = f(x_i; x_1, \dots, x_n) = \frac{e^{x_i}}{\sum_j e^{x_j}}$
+- $\displaystyle \mathrm{softmax}(\mathbf{x}) = \begin{pmatrix} \frac{e^{x_1}}{\sum_j e^{x_j}} \\ \vdots \\ \frac{e^{x_n}}{\sum_j e^{x_j}} \end{pmatrix}$
 - `axis=1` in parameters means, for matrix, reduce along rows and generate a column vector. E.g. see [np.linalg.norm](#numpy-functions)
-- **Always** `keepdims=True`.
+- **Always** `keepdims=True`
 - Make use of **broadcasting**.
 
 ## W2A2: Logistic Regression with a Neural Network mindset
@@ -190,4 +199,22 @@ Functions:
 - `compute_cost(A2, Y) => cost: number`
 - `backward_propagation(parameters, cache, X, Y) => grads`
 - `update_parameters(parameters, grads, learning_rate = 1.2) => parameters`
-- `nn_model(X, Y, n_h, num_iterations = 10000, print_cost=False) => paramete
+- `nn_model(X, Y, n_h, num_iterations = 10000, print_cost=False) => parameters`
+
+## W4A1 Building your Deep Neural Network: Step by Step
+
+Variables:
+
+- `parameters = {W1, b1, W2, b2, ...}`
+- `grads = {dW1, db1, dW2, db2, ...}`
+
+Functions:
+
+- `initialize_parameters_deep(layer_dims: list) => parameters`
+- `linear_forward(A, W, b) => Z, cache{A, W, b}`
+- `linear_activation_forward(A_prev, W, b, activation: str) => A, cache(linear_cache, activation_cache)`
+- `L_model_forward(X, parameters) => A_L, caches: cache[]`
+- `compute_cost(AL, Y) => cost` $\quad cost := J(\mathbf{A}^{[L]}, \mathbf{Y})$
+- `linear_backward(dZ, cache: {A_prev, W, b}) => dA_prev, dW, db`
+- `linear_activation_backward(dA, cache: {linear, activation}, activation: str) => dA_prev, dW, db`
+- `L_model_backward(AL, Y, caches) => grads`
