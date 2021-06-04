@@ -181,7 +181,7 @@ With $L(a,y)=-y\ln a - (1-y)\ln(1-a)$, we have $\frac{\partial L}{\partial a} = 
 
 Andrew Ng's vectorization summary:
 
-![Summary of gradient descent by Andrew Ng](./image/2021-0529-192453.png)
+![Summary of gradient descent by Andrew Ng](./DL_Course1-image/2021-0529-192453.png)
 
 ## W3A1 Planar data classification with one hidden layer
 
