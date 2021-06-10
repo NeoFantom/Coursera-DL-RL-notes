@@ -9,7 +9,10 @@
     - [1.1.5. Notations](#115-notations)
     - [1.1.6. 3 types of CNN layer](#116-3-types-of-cnn-layer)
     - [1.1.7. Pooling](#117-pooling)
-    - [Reason of using CNN](#reason-of-using-cnn)
+    - [1.1.8. Reason of using CNN](#118-reason-of-using-cnn)
+  - [1.2. W1A1](#12-w1a1)
+    - [1.2.1. Functions](#121-functions)
+    - [1.2.2. Mistakes made](#122-mistakes-made)
 
 ## 1.1. Convolution operation
 
@@ -53,12 +56,15 @@ Jump $s$ steps instead of 1 step every time you move on.
 - $p ^{[l]}$ padding
 - $s ^{[l]}$ stride
 - Input sizes: $n_H ^{[l-1]} \times n_W ^{[l-1]} \times n_C ^{[l-1]}$
-- Filter sizes: $f ^{[l]}\times f ^{[l]} \times n_C ^{[l-1]}$, which is the number of parameters in the filter.
+  - With $m$ training examples: $m \times n_H ^{[l-1]} \times n_W ^{[l-1]} \times n_C ^{[l-1]}$
+- Filter sizes: $f ^{[l]}\times f ^{[l]} \times n_C ^{[l-1]}$, which is also the number of parameters in the filter.
+  - $n_C ^{[l]}$ is equal to number of filter in layer $l$, because filters and their results are stacked in the channels dimension.
+  - Whole layer stacked together: $f ^{[l]}\times f ^{[l]} \times n_C ^{[l-1]} \times n_C^{[l]}$
 - Output sizes: $n_H ^{[l]} \times n_W ^{[l]} \times n_C ^{[l]}$
+  - With $m$ training examples: $m\times n_H ^{[l]} \times n_W ^{[l]} \times n_C ^{[l]}$
 - Size relation between layers: $n_{H,W} ^{[l]} = \lfloor \frac{n_{H,W} ^{[l-1]} + 2p^{[l]} - f^{[l]}}{s^{[l]}} +1 \rfloor$
-- $n_C ^{[l]}$ is equal to number of filter in layer $l$, because filters and their results are stacked in the channels dimension.
 - Each **neuron** (containing one filter $\mathcal{F}$) has form $\; \mathbf{a}^{[l]} = f(\mathbf{a}^{[l-1]}*\mathcal{F} + b)$ where $*$ means convolution.
-  - Each neuron has $f ^{[l]}\times f ^{[l]} \times n_C ^{[l-1]}+1$ parameters.
+  - Each neuron has $f ^{[l]}\times f ^{[l]} \times n_C ^{[l-1]}+1$ trainable parameters.
   - Each layer has $f ^{[l]}\times f ^{[l]} \times n_C ^{[l-1]} \times n_C ^{[l]}+ n_C ^{[l]}$, because each layer has $n_C ^{[l]}$ filters, or neurons.
 
 ### 1.1.6. 3 types of CNN layer
@@ -73,7 +79,20 @@ Types: max pooling, average pooling.
 
 Pooling layer has **no parameters** to learn.
 
-### Reason of using CNN
+### 1.1.8. Reason of using CNN
 
 1. Parameter sharing: a filter useful here, might be useful there.
 1. Sparsity of connections: each output relies on a small part of input.
+
+## 1.2. W1A1
+
+### 1.2.1. Functions
+
+- `zero_pad(X, pad_width) => X_padded`
+- `conv_single_step(a_slice_prev, W, b) => Z`
+- `conv_forward(A_prev, W, b, hparameters)`
+
+### 1.2.2. Mistakes made
+
+The final convolution step should be `Z[i,h,w,c] = (np.sum(a_slice * weights) + bias).item()`,\
+~~but I wrote `Z[i,h,w,c] = (np.sum(a_slice * weights + bias)).item()`~~
