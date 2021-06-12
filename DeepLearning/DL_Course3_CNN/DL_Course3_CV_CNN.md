@@ -10,9 +10,15 @@
     - [1.1.6. 3 types of CNN layer](#116-3-types-of-cnn-layer)
     - [1.1.7. Pooling](#117-pooling)
     - [1.1.8. Reason of using CNN](#118-reason-of-using-cnn)
-  - [1.2. W1A1](#12-w1a1)
+  - [1.2. W1A1 Convolution model Step by Step](#12-w1a1-convolution-model-step-by-step)
     - [1.2.1. Functions](#121-functions)
     - [1.2.2. Mistakes made](#122-mistakes-made)
+    - [1.2.3. What you should remember](#123-what-you-should-remember)
+    - [1.2.4. Back propagation](#124-back-propagation)
+  - [W1A2 Convolutional Neural Networks: Application](#w1a2-convolutional-neural-networks-application)
+    - [Keras](#keras)
+    - [Functions](#functions)
+    - [Plot train history](#plot-train-history)
 
 ## 1.1. Convolution operation
 
@@ -84,15 +90,82 @@ Pooling layer has **no parameters** to learn.
 1. Parameter sharing: a filter useful here, might be useful there.
 1. Sparsity of connections: each output relies on a small part of input.
 
-## 1.2. W1A1
+## 1.2. W1A1 Convolution model Step by Step
 
 ### 1.2.1. Functions
 
 - `zero_pad(X, pad_width) => X_padded`
 - `conv_single_step(a_slice_prev, W, b) => Z`
-- `conv_forward(A_prev, W, b, hparameters)`
+- `conv_forward(A_prev, W, b, hparameters) => Z, cache(A_prev, W, b, hparameters)`
+- `pool_forward(A_prev, hparameters, mode = "max") => A, cache(A_prev, hparameters)`
+- `conv_backward(dZ, cache) => dA_prev, dW, db`
+- `create_mask_from_window(x) => mask`
+- `distribute_value(dz: number, shape) => average_matrix`
+- `pool_backward(dA, cache, mode = "max") => dA_prev`
 
 ### 1.2.2. Mistakes made
 
 The final convolution step should be `Z[i,h,w,c] = (np.sum(a_slice * weights) + bias).item()`,\
 ~~but I wrote `Z[i,h,w,c] = (np.sum(a_slice * weights + bias)).item()`~~
+
+### 1.2.3. What you should remember
+
+- A convolution extracts features from an input image by taking the dot product between the input data and a 2D array of weights (the filter).
+- The 2D output of the convolution is called the *feature map*
+- A convolution layer is where the filter slides over the image and computes the dot product
+  - This transforms the input volume into an output volume of different size
+- Zero padding helps keep more information at the image borders, and is helpful for building deeper networks, because you can build a CONV layer without shrinking the height and width of the volumes
+- Pooling layers gradually reduce the height and width of the input by sliding a 2D window over each specified region, then summarizing the features in that region
+
+### 1.2.4. Back propagation
+
+Mathematical calculations:
+
+$$dA \mathrel{+}= \sum _{h=0} ^{n_H} \sum_{w=0} ^{n_W} W_c \times dZ_{hw} \tag{1}$$
+
+$$dW_c \mathrel{+}= \sum_{h=0} ^{n_H} \sum_{w=0} ^ {n_W} a_{slice} \times dZ_{hw}  \tag{2}$$
+
+$$db = \sum_h \sum_w dZ_{hw} \tag{3}$$
+
+In python code, for one training example:
+
+```python
+da_prev_pad[vert_start:vert_end, horiz_start:horiz_end, :] += 
+    W[:,:,:,c] * dZ[i, h, w, c]
+dW[:,:,:,c] \mathrel{+}= a_slice * dZ[i, h, w, c]
+db[:,:,:,c] += dZ[i, h, w, c]
+```
+
+## W1A2 Convolutional Neural Networks: Application
+
+### Keras
+
+- See keras.io
+- If you want to print summary of layers, you need to [specify the input shape in advance](https://keras.io/guides/sequential_model/#specifying-the-input-shape-in-advance).
+  - Easiest way is to use `input_shape` kwarg.
+
+### Functions
+
+```python
+import tensorflow.keras.layers as tfl
+# Sequantial model
+model = tf.keras.Sequantial([tfl.Conv2D(...), ...])
+# Functional API
+inputs = tf.keras.Input(shape=(...))
+t = tfl.Conv2D(...)(inputs)
+t = tfl...
+output = tfl.Dense(...)(t)
+model = tf.keras.Model(inputs=inputs, outputs=outputs)
+```
+
+### Plot train history
+
+```python
+df_loss_acc = pd.DataFrame(history.history)
+df_loss = df_loss_acc[['loss','val_loss']]
+df_loss.rename(columns={'loss':'train','val_loss':'validation'},inplace=True)
+df_acc = df_loss_acc[['accuracy','val_accuracy']]
+df_acc.rename(columns={'accuracy':'train','val_accuracy':'validation'},inplace=True)
+df_loss.plot(title='Model loss',figsize=(12,8)).set(xlabel='Epoch',ylabel='Loss')
+df_acc.plot(title='Model Accuracy',figsize=(12,8)).set(xlabel='Epoch',ylabel='Accuracy')
+```
