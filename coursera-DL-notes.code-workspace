@@ -5,6 +5,10 @@
 		}
 	],
 	"settings": {
-		"markdown.styles": ["mdstyle.css"]
+		"markdown.styles": [
+			"mdstyle.css"
+		],
+		"python.pythonPath": "D:\\ProgramData\\Miniconda3\\envs\\de\\python.exe",
+		"jupyter.jupyterServerType": "local"
 	}
 }
