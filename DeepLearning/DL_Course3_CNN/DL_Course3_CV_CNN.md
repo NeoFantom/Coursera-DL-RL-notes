@@ -15,10 +15,16 @@
     - [1.2.2. Mistakes made](#122-mistakes-made)
     - [1.2.3. What you should remember](#123-what-you-should-remember)
     - [1.2.4. Back propagation](#124-back-propagation)
-  - [W1A2 Convolutional Neural Networks: Application](#w1a2-convolutional-neural-networks-application)
-    - [Keras](#keras)
-    - [Functions](#functions)
-    - [Plot train history](#plot-train-history)
+  - [1.3. W1A2 Convolutional Neural Networks: Application](#13-w1a2-convolutional-neural-networks-application)
+    - [1.3.1. Keras](#131-keras)
+    - [1.3.2. Functions](#132-functions)
+    - [1.3.3. Plot train history](#133-plot-train-history)
+  - [1.4. Read-world solution](#14-read-world-solution)
+    - [1.4.1. Papers](#141-papers)
+    - [1.4.2. Modern networks](#142-modern-networks)
+    - [1.4.3. Transfer learning](#143-transfer-learning)
+    - [1.4.4. Data augmentation](#144-data-augmentation)
+    - [1.4.5. Benchmarking and competition tips](#145-benchmarking-and-competition-tips)
 
 ## 1.1. Convolution operation
 
@@ -136,15 +142,15 @@ dW[:,:,:,c] \mathrel{+}= a_slice * dZ[i, h, w, c]
 db[:,:,:,c] += dZ[i, h, w, c]
 ```
 
-## W1A2 Convolutional Neural Networks: Application
+## 1.3. W1A2 Convolutional Neural Networks: Application
 
-### Keras
+### 1.3.1. Keras
 
 - See keras.io
 - If you want to print summary of layers, you need to [specify the input shape in advance](https://keras.io/guides/sequential_model/#specifying-the-input-shape-in-advance).
   - Easiest way is to use `input_shape` kwarg.
 
-### Functions
+### 1.3.2. Functions
 
 ```python
 import tensorflow.keras.layers as tfl
@@ -158,7 +164,7 @@ output = tfl.Dense(...)(t)
 model = tf.keras.Model(inputs=inputs, outputs=outputs)
 ```
 
-### Plot train history
+### 1.3.3. Plot train history
 
 ```python
 df_loss_acc = pd.DataFrame(history.history)
@@ -169,3 +175,55 @@ df_acc.rename(columns={'accuracy':'train','val_accuracy':'validation'},inplace=T
 df_loss.plot(title='Model loss',figsize=(12,8)).set(xlabel='Epoch',ylabel='Loss')
 df_acc.plot(title='Model Accuracy',figsize=(12,8)).set(xlabel='Epoch',ylabel='Accuracy')
 ```
+
+## 1.4. Read-world solution
+
+### 1.4.1. Papers
+
+- LeNet-5
+  - Just read section II and III.
+  - Has some old-fashioned techniques with number of channels, no ReLU activations, nonlinearity after pooling.
+  - A small model, input dimension: (32,32,1)
+- AlexNet
+  - Not important things like multiple GPUs training, local response normalization (not so effective)
+  - Easier paper to read.
+  - First paper to have the CV scientist to take a godd look at DL.
+  - Input dimension: (227,227,3)
+- VGG-16
+  - Simple architechture, few hyperparameters, relatively deep, many trainable parameters.
+  - Half the height and width every layer, double the channels.
+  - Input dimension: (224,224,3)
+
+### 1.4.2. Modern networks
+
+- ResNet
+  - Basic block: residual network.
+  - Reason it does well going deeper: Because the worst it does is just to learn identity function and become a shallow network. If any luck, it'll learn some useful information.
+- Inception (GoogLeNet)
+  - *1×1 convolutions* reduce channel dimension, also called *network in network*
+  - Motivations
+    - Use 1×1 convolutions to reduce channels and then do convolution, thus reducing parameters ten times fewer.
+    - Instead of choosing a convolution filter size, let's do them all, stack them together, then apply a 1×1 convolution.
+  - Name origin: in movie *Inception*, Leo says "We need to go deeper".
+  - Also has some side branches to ensure the middle layers calculate good enough features for prediction.
+- MobileNet
+  - MobileNet v1 core idea: depthwise seperable convolutions (as compared to normal convolutions)
+    - First do a single channel convolution on every channel.
+    - Then do a 1×1 convolution on every pixel.
+  - MobileNet v2 bottleneck:
+    - Skip connection in parallel.
+    - Expansion 1×1 convolution, depthwise convolution, projection 1×1 convolution.
+- EfficientNet: A good way to trade off between $r$ (resolution), $d$ (network depth), $w$ (layer width). Look into the source code.
+
+### 1.4.3. Transfer learning
+
+### 1.4.4. Data augmentation
+
+- Geometric distortion.
+- Color shifting.
+  - PCA color augmentation.
+
+### 1.4.5. Benchmarking and competition tips
+
+- Ensenbling: train multiple networks and average their **results.**
+- Test time multi-cropping: feed multiple cropped verisons of a test image, average their results.
