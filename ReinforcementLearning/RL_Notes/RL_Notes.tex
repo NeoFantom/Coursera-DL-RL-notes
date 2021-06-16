@@ -1,0 +1,43 @@
+\documentclass{article}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{xcolor}
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+\begin{document}
+
+\title{Reinforcement Learning Notes}
+\author{Neo}
+\date{}
+\maketitle
+
+\tableofcontents
+
+\section{Basics}
+
+\begin{enumerate}
+  \item Basic update rule:
+    \[ Q_{n+1} = Q_n + \alpha_n (R_n-Q_n)\]
+    where \(Q_n\) is step-\(n\) estimate, \(R-n\) is step-\(n\) reward, \(\alpha_n\) is \(n\)-th stepsize.
+  \item Update rule induction:
+    \begin{align*}
+      Q_{n+1}= & Q_n + \alpha_{n} (R_n - Q_n)                                                                              \\
+      =        & \alpha_{n}R_n + (1-\alpha_{n})Q_n                                                                         \\
+      =        & \alpha_{n}R_n + (1-\alpha_{n})\alpha_{n-1} R_{n-1} + (1-\alpha_{n})(1-\alpha_{n-1})\alpha_{n-2} R_{n-2} + \\
+               & \dots + (1-\alpha_{n})\cdots(1-\alpha_{2})\alpha_1 R_1 +                                                  \\
+               & \dots + (1-\alpha_{n})\cdots(1-\alpha_{2})(1-\alpha_1) Q_1
+    \end{align*}
+  \item \emph{Biased by initial estimate}: initial value \(Q_1\) has impact on future action. If this impact disappears once an action is selected, it's an \emph{unbiased} policy.
+    \begin{enumerate}
+      \item Note that \emph{unbiased} is equivalent to condition \(1-\alpha_1 = 0\), i.e. \(\color{red}\alpha_1=1\).
+    \end{enumerate}
+  \item \emph{UCB: upper confidence bound} policy:
+    \[ A_t = \argmax_a \left(Q_t(a) + c \sqrt{\frac{\ln t}{N_t(a)}} \right) \]
+    where \(N_t(a)\) is number of selections of action \(a\), \(c\) is some constant.
+\end{enumerate}
+
+\end{document}
