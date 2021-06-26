@@ -52,6 +52,7 @@ See [oneline documentaion](https://numpy.org/doc/stable/reference/random/index.h
   ```
 - `np.random.rand(dim1, dim2, ...)` uniform distribution $U[0, 1)$
 - `np.random.randn(dim1, dim2, ...)` standard normal distribution $N(0, 1)$
+- `random.choice(a, size=None, replace=True, p=None)` Generates a random sample from a given 1-D array
 
 ### Working with images
 

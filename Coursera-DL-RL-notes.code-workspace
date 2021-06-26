@@ -8,7 +8,7 @@
 		"markdown.styles": [
 			"mdstyle.css"
 		],
-		"python.pythonPath": "D:\\ProgramData\\Miniconda3\\envs\\de\\python.exe",
+		"python.defaultInterpreterPath": "D:\\ProgramData\\Miniconda3\\envs\\de\\python.exe",
 		"jupyter.jupyterServerType": "local"
 	}
 }
