@@ -37,10 +37,10 @@ In MDP, actions influence not just immediate rewards like in *bandit problems*, 
    1. Expected return
       $$G_t := \sum_{k=1}^{\infty} \gamma^{k-1}R_{t+k}$$
       where $\gamma$ is the *discount rate*.
-   1. 
+   1. Recursive expected return
 
 ### 1.2.3. Discussion
 
 Question: The reward hypothesis states “that all of what we mean by goals and purposes can be well thought of as the maximization of the expected value of the cumulative sum of a received scalar signal (called reward).” Can you think of a situation that is **not** well-modeled by maximizing a scalar reward signal?
 
-I think multiple-goal optimization problems are not well modeled by scalar reward signal. Consider this simple example: A computer needs to *learn how to distribute execution time among users*. Now if we simply assign each action a reward, where an action means to excute some user's task, this policy will result in some user's task not excuted at all, because the computer doesn't distinguish between different users. We can, however, change our reward and goal to some complicated functions that takes into account user's waiting time. Actually this is a typical problem in operating systems designs. We can do pretty well, but certainly not with single goal, or single scalar reward, because when our priorities changes, it'll be hard to change our algorithm accordingly.
+> I think multiple-goal optimization problems are not well modeled by scalar reward signal. Consider this simple example: A computer needs to *learn how to distribute execution time among users*. Now if we simply assign each action a reward, where an action means to excute some user's task, this policy will result in some user's task not excuted at all, because the computer doesn't distinguish between different users. We can, however, change our reward and goal to some complicated functions that takes into account user's waiting time. Actually this is a typical problem in operating systems designs. We can do pretty well, but certainly not with single goal, or single scalar reward, because when our priorities changes, it'll be hard to change our algorithm accordingly.
