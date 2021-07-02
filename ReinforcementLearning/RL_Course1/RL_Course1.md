@@ -4,6 +4,7 @@
   - [1.1. Assignment 1: Bandits and Exploration/Exploitation](#11-assignment-1-bandits-and-explorationexploitation)
   - [1.2. Week 2](#12-week-2)
     - [1.2.1. Markov decesion process (MDP)](#121-markov-decesion-process-mdp)
+      - [MDP types](#mdp-types)
     - [1.2.2. Two types of tasks](#122-two-types-of-tasks)
     - [1.2.3. Discussion](#123-discussion)
 
@@ -16,15 +17,21 @@
 
 ### 1.2.1. Markov decesion process (MDP)
 
-In MDP, actions influence not just immediate rewards like in *bandit problems*, but also subsequent situations, or states, and through those future rewards.
-
-- Tradeoff: immediate and delayed rewards.
-- Estimated values are different.
-  - In *bandit problems*, we estimate the value of action $q_*(a)$.
-  - In *MDP*, we estimate the value of an action $a$ in given state $s$, aka $q_*(s, a)$. 
-  - <span style='color:red'> or we estimate the value $v_*(s)$ of each state given optimal action selections.</span>
-
 ![MDP model](RL_Course1-images/2021-0628-105654.png)
+
+- In *MDP*, actions influence not just immediate rewards like in *bandit problems*, but also subsequent situations, or states, and through those future rewards.
+- There is a tradeoff: immediate and delayed rewards.
+- Estimated values are different for *MDP* and *bandit*
+  - In *bandit problems*, we estimate the value of action $q_*(a)$.
+  - In *MDP*, we estimate the value of an action $a$ in given state $s$, aka $q_*(s, a)$. <span style='color:red'> or we estimate the value $v_*(s)$ of each state given optimal action selections.</span>
+- An MDP is completely described by a set of probabilities
+  $$p(s_{t+1}, r_{t+1} \mid s_t, a_t)$$
+- A state is said to have **Markov property**, if it contains information about all aspects of the past agent–environment interaction that make a di↵erence for the future.
+
+#### MDP types
+
+1. *Finite MDP* \
+   The sets of states, actions, and rewards $(S, A, R)$ all have a finite number of elements.
 
 ### 1.2.2. Two types of tasks
 
