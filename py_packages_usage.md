@@ -18,6 +18,8 @@ See definition of [along an axis](https://numpy.org/doc/stable/glossary.html)
 
 ### Array manipulations
 
+`ndarray.`
+
 - `reshape(*shape)` is often used. Parameter `-1` means auto-shape. E.g.
   - `v.reshape(-1, 1)` generates column vector `v.shape = [N, 1]`
   - `v.reshape(-1)` generates 1d array `v.shape = [N,]`
@@ -50,9 +52,10 @@ See [oneline documentaion](https://numpy.org/doc/stable/reference/random/index.h
   vals = random.standard_normal(10)
   more_vals = random.standard_normal(10)
   ```
-- `np.random.rand(dim1, dim2, ...)` uniform distribution $U[0, 1)$
-- `np.random.randn(dim1, dim2, ...)` standard normal distribution $N(0, 1)$
-- `random.choice(a, size=None, replace=True, p=None)` Generates a random sample from a given 1-D array
+- Deprecated:
+  - `np.random.rand(dim1, dim2, ...)` uniform distribution $U[0, 1)$
+  - `np.random.randn(dim1, dim2, ...)` standard normal distribution $N(0, 1)$
+  - `random.choice(a, size=None, replace=True, p=None)` Generates a random sample from a given 1-D array
 
 ### Working with images
 
