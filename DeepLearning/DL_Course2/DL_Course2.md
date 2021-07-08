@@ -11,6 +11,8 @@ Improving Deep Neural Networks: Hyperparameter Tuning, Regularization and Optimi
     - [1.1.5. Normalizing inputs](#115-normalizing-inputs)
     - [1.1.6. Initializing weights](#116-initializing-weights)
     - [1.1.7. Gradient checking](#117-gradient-checking)
+    - [1.1.8. W1A1 conclusions](#118-w1a1-conclusions)
+    - [1.1.9. W1A2](#119-w1a2)
 
 ## 1.1. Week 1
 
@@ -81,7 +83,8 @@ Or we can choose other variances:
 
 - $\displaystyle \operatorname{Var}(w_i) = \frac{2}{n^{[l-1]}}$ for ReLU activation
 - $\displaystyle \operatorname{Var}(w_i) = \sqrt{ \frac{1}{n^{[l-1]}} }$ for tanh activation
-- $\displaystyle \operatorname{Var}(w_i) = \sqrt{ \frac{2}{n^{[l-1]} + n^{[l]}} }$ , called Xavier initialization.
+- $\displaystyle \operatorname{Var}(w_i) = \sqrt{ \frac{2}{n^{[l-1]} + n^{[l]}} }$ , called Xavier initialization. `?????????????????????????`
+- $\displaystyle \operatorname{Var}(w_i) = \sqrt{ \frac{2}{n^{[l-1]}} }$ for He initialization, by [Kaiming He](http://kaiminghe.com/).
 
 ### 1.1.7. Gradient checking
 
@@ -104,3 +107,23 @@ Also:
 - Remember regularizition
 - Doesn't work with dropout
 - Sometimes code works bad when $w,b$ are sufficient large, that case, run multiple times with random initialization.
+
+### 1.1.8. W1A1 conclusions
+
+|                                             |                |                         |
+| ------------------------------------------- | -------------- | ----------------------- |
+| Model                                       | Train accuracy | Problem/Comment         |
+| 3-layer NN with zeros initialization        | 50%            | fails to break symmetry |
+| 3-layer NN with large random initialization | 83%            | too large weights       |
+| 3-layer NN with He initialization           | 99%            | recommended method      |
+
+Takeaways:
+
+- Different initializations lead to very different results
+- Random initialization is used to break symmetry and make sure different hidden units can learn different things
+- Resist initializing to values that are too large!
+- He initialization works well for networks with ReLU activations
+
+### 1.1.9. W1A2
+
+ok
