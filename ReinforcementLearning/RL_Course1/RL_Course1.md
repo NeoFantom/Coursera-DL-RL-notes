@@ -1,7 +1,7 @@
 # 1. RL Course 1
 
 - [1. RL Course 1](#1-rl-course-1)
-  - [1.1. Assignment 1: Bandits and Exploration/Exploitation](#11-assignment-1-bandits-and-explorationexploitation)
+  - [1.1. W1A1: Bandits and Exploration/Exploitation](#11-w1a1-bandits-and-explorationexploitation)
   - [1.2. Week 2](#12-week-2)
     - [1.2.1. Markov decesion process (MDP)](#121-markov-decesion-process-mdp)
       - [1.2.1.1. MDP types](#1211-mdp-types)
@@ -9,7 +9,7 @@
     - [1.2.3. Discussion](#123-discussion)
     - [1.2.4. Peer graded assignments](#124-peer-graded-assignments)
 
-## 1.1. Assignment 1: Bandits and Exploration/Exploitation
+## 1.1. W1A1: Bandits and Exploration/Exploitation
 
 1. `argmax(q_values) => action: int` random choice of tied maximal `q_values`
 1. `GreedyAgent.agent_step(self, reward, observation=None) => currentAction`

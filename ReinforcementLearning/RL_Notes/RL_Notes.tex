@@ -17,7 +17,7 @@
 
 \tableofcontents
 
-\section{Basics}
+\section{k-armed bandit problem}
 
 \begin{enumerate}
   \item Basic update rule:
@@ -39,5 +39,40 @@
     \[ A_t = \argmax_a \left(Q_t(a) + c \sqrt{\frac{\ln t}{N_t(a)}} \right) \]
     where \(N_t(a)\) is number of selections of action \(a\), \(c\) is some constant.
 \end{enumerate}
+
+\section{Finite MDP}
+
+The state value function is defined as
+\[ v_\pi(s) := \mathbb{E}_\pi[G_t\mid S_t=s] = \mathbb{E}_\pi \left[ \sum_{k=0}^{\infty} \gamma^k R_{t+k+1} \,\middle|\, S_t = s \right] . \]
+And the action value functions is defined as
+\[ q_\pi(s, a) := \mathbb{E}_\pi[G_t\mid S_t=s, A_t=a] = \mathbb{E}_\pi \left[ \sum_{k=0}^{\infty} \gamma^k R_{t+k+1} \,\middle|\, S_t=s, A_t=a . \right] \]
+If we substitute \(G_t=R_{t+1} + \gamma G_{t+1}\) in those equations, we have the \emph{Bellman equation}
+\begin{gather}
+  v_\pi(s) = \sum_a \pi(a|s) \sum_{s', r} p(s', r | s, a) \big( r + \gamma v_\pi(s') \big) \\
+  q_\pi(s, a) = \sum_{s', r} p(s', r | s, a) \left( r + \gamma\sum_{a'} \pi(a'|s') q_\pi(s', a') \right) .
+\end{gather}
+
+An optimal policy \(\pi_*\) is a policy which gets an expected return better than or at least equal to any other policy. The optimal policy always definitely chooses the action with the highest value, or randomly chooses one action between highest ties, among all the possible actions under all the possible policies. A more useful function is the \emph{optimal state value function} and \emph{optimal action value function}, which is defined as
+\[ v_*(s) = \max_{\pi} v_\pi (s), \quad q_*(s, a) = \max_{\pi} q_\pi (s, a) . \]
+And we have the following relation
+\begin{gather*}
+  q_*(s, a) = \mathbb{E} [ R_{t+1} + \gamma v_*(S_{t+1}) \mid S_t=s, A_t=a ] \\
+  v_*(s) = \max_{a} q_*(s, a) .
+\end{gather*}
+
+Similarly, we can derive the \emph{optimal Bellman equations}
+\begin{gather}
+  v_*(s) = \max_a \sum_{s', r} p(s', r | s, a) \big( r + \gamma v_*(s') \big) \\
+  q_*(s, a) = \sum_{s', r} p(s', r | s, a) \left( r + \gamma \max_{a'} q_*(s', a') \right) .
+\end{gather}
+Unfortunately, this set of equations is not linear due to the \(\max\) operator, therefore cannot be solved easily.
+
+\subsection{Approximation of optimality}
+
+Nevertheless, the online nature of reinforcement learning makes it possible to approximate
+optimal policies in ways that put more effort into learning to make good decisions for
+frequently encountered states, at the expense of less effort for infrequently encountered
+states. This is one key property that distinguishes reinforcement learning from other
+approaches to approximately solving MDPs.
 
 \end{document}
